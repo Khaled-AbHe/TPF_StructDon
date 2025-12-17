@@ -1,11 +1,7 @@
 package mv.sdd.sim;
 
 import mv.sdd.io.Action;
-import mv.sdd.io.ActionType;
-import mv.sdd.model.Client;
-import mv.sdd.model.Commande;
-import mv.sdd.model.EtatCommande;
-import mv.sdd.model.MenuPlat;
+import mv.sdd.model.*;
 import mv.sdd.sim.thread.Cuisinier;
 import mv.sdd.utils.Logger;
 
@@ -24,6 +20,10 @@ public class Restaurant {
 
     public int getTemps() {
         return temps;
+    }
+
+    public ArrayDeque<Commande> getFileDeCommandes() {
+        return fileDeCommandes;
     }
 
     public void setTemps(int temps) {
@@ -49,7 +49,10 @@ public class Restaurant {
                 ajouterClient(action.getParam1(), action.getParam3(), action.getParam2());
                 break;
             case PASSER_COMMANDE:
-                passerCommande(action.getParam1(), MenuPlat.valueOf(action.getParam3()));
+                synchronized (fileDeCommandes) {
+                    fileDeCommandes.add(passerCommande(action.getParam1(), MenuPlat.valueOf(action.getParam3())));
+                    fileDeCommandes.notify();
+                }
                 break;
             case AVANCER_TEMPS:
                 avancerTemps(action.getParam1());
@@ -69,7 +72,7 @@ public class Restaurant {
         // Votre code ici.
         setTemps(dureeMax);
         for (int i = 0; i < nbCuisiniers; i++) {
-            Thread t = new Thread(new Cuisinier());
+            Thread t = new Thread(new Cuisinier(this));
             cuisiniers.add(t);
             t.start();
         }
@@ -77,15 +80,24 @@ public class Restaurant {
 
     public void avancerTemps(int minutes) {
         // Votre code ici.
+            tick(minutes);
     }
 
     public void arreterService(){
         // Votre code ici.
+        cuisiniers.forEach(Thread::interrupt);
     }
 
     // TODO : Déclarer et implémenter les méthodes suivantes
     // tick() | This is the method that manipulates the time in minutes
-    public void tick() {}
+    public void tick(int minutes) {
+        // temps
+        setTemps(getTemps() - minutes);
+        // clients
+        diminuerPatienceClients(minutes);
+        // prep
+
+    }
 
     // afficherEtat()
     public void afficherEtat() {}
@@ -96,7 +108,9 @@ public class Restaurant {
     // Client ajouterClient(int id, String nom, int patienceInitiale)
     // DONE
     public void ajouterClient(int id, String nom, int patienceInitiale) {
-        clients.put(id, creerClient(id, nom, patienceInitiale));
+        Client client = creerClient(nom, patienceInitiale);
+        client.setId(id);
+        clients.put(id, client);
     }
 
     // Commande passerCommande(int idClient, MenuPlat codePlat)
@@ -115,13 +129,13 @@ public class Restaurant {
 
     // marquerCommandeTerminee(Commande commande)
     public void marquerCommandeTerminee(Commande commande) {
-        commande.setEtat(EtatCommande.LIVREE);
+        commande.setEtat(EtatCommande.PRETE);
     }
 
     // Client creerClient(String nom, int patienceInitiale)
     // DONE
-    public Client creerClient(int id, String nom, int patienceInitiale) {
-        return new Client(id, nom, patienceInitiale);
+    public Client creerClient(String nom, int patienceInitiale) {
+        return new Client(-1 , nom, patienceInitiale);
     }
 
     // Commande creerCommandePourClient(Client client)
@@ -136,4 +150,10 @@ public class Restaurant {
     //  pour améliorer la lisibilité des méthodes en les découpant au besoin (éviter les trés longues méthodes)
     //  exemple : on peut avoir une méthode diminuerPatienceClients()
     //  qui permet de diminuer la patience des clients (appelée par tick())
+
+    public void diminuerPatienceClients(int minutes) {
+        for (Client client : clients.values()) {
+            client.diminuerPatience(minutes);
+        }
+    }
 }

@@ -52,7 +52,7 @@ public class Commande {
 
     // TODO : Ajoutez la méthode demarrerPreparation
     public void demarrerPreparation() {
-        setEtat(EtatCommande.EN_ATTENTE);
+        setEtat(EtatCommande.EN_PREPARATION);
     }
 
     // TODO : Ajoutez la méthode decrementerTempsRestant

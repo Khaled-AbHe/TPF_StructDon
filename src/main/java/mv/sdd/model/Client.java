@@ -3,7 +3,7 @@ package mv.sdd.model;
 import java.util.Objects;
 
 public class Client {
-    private final int id;
+    private int id;
     private final String nom;
     private int patience;
     private EtatClient etat;
@@ -38,6 +38,11 @@ public class Client {
     }
 
     // setters
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setEtat(EtatClient etat) {
         this.etat = etat;
     }
@@ -50,6 +55,10 @@ public class Client {
 
     public void diminuerPatience(int minutes) {
         // TODO: diminuer patience et passer à PARTI_FACHE si <= 0
+        this.patience -= minutes;
+        if (patience <= 0) {
+            setEtat(EtatClient.PARTI_FACHE);
+        }
     }
 
     @Override
