@@ -20,13 +20,23 @@ public class Cuisinier implements Runnable{
         }
     }
 
+    public void prepare() throws InterruptedException {
+        synchronized (Restaurant.tempsVerrou) {
+            int oldTime = RESTAURANT.getTemps();
+            while (RESTAURANT.getTemps() == oldTime) {
+                Restaurant.tempsVerrou.wait();
+            }
+            commande.decrementerTempsRestant(oldTime - RESTAURANT.getTemps());
+        }
+    }
+
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 setCommande();
                 commande.demarrerPreparation();
-//                System.out.println(commande.getPlats().get(1).getNom());
+                prepare();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

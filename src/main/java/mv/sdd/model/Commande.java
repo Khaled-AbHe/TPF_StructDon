@@ -42,7 +42,7 @@ public class Commande {
         this.etat = etat;
     }
 
-    // TODO : Ajoutez la méthode ajouterPlat
+    // DONE : Ajoutez la méthode ajouterPlat
     public void ajouterPlat(int id, MenuPlat mp) {
         Plat p = Constantes.MENU.get(mp);
         plats.put(id, p);
@@ -55,20 +55,25 @@ public class Commande {
         setEtat(EtatCommande.EN_PREPARATION);
     }
 
-    // TODO : Ajoutez la méthode decrementerTempsRestant
-    public void decrementerTempsRestant() {}
+    // DONE : Ajoutez la méthode decrementerTempsRestant
+    public void decrementerTempsRestant(int temps) {
+        this.tempsRestant -= temps;
+        if (tempsRestant <= 0) {
+            setEtat(EtatCommande.PRETE);
+        }
+    }
 
     // TODO : Ajoutez la méthode estTermineeParTemps
     public boolean estTermineeParTemps() {
         return false;
     }
 
-    // TODO : Ajoutez la méthode calculerTempsPreparationTotal
+    // DONE : Ajoutez la méthode calculerTempsPreparationTotal
     public void calculerTempsPreparationTotal(Plat plat) {
         this.tempsRestant += plat.getTempsPreparation();
     }
 
-    // TODO : Ajoutez la méthode calculerMontant
+    // DONE : Ajoutez la méthode calculerMontant
     public void calculerMontant(Plat plat) {
         this.montant += plat.getPrix();
     }

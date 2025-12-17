@@ -16,8 +16,10 @@ public class Restaurant {
     private final HashMap<Integer, Client> clients;
     private final ArrayDeque<Commande> fileDeCommandes = new ArrayDeque<>();
     private final List<Thread> cuisiniers = new ArrayList<>();
+    public static final Object tempsVerrou = new Object();
     private int temps;
 
+    // getters
     public int getTemps() {
         return temps;
     }
@@ -26,6 +28,7 @@ public class Restaurant {
         return fileDeCommandes;
     }
 
+    // setters
     public void setTemps(int temps) {
         this.temps = temps;
     }
@@ -36,9 +39,8 @@ public class Restaurant {
         this.clients = clients;
     }
 
-    // TODO : implémenter les méthodes suivantes
+    // DONE : implémenter les méthodes suivantes
     // Méthode appelée depuis App pour chaque action
-    // DONE
     public void executerAction(Action action) {
         // Votre code ici.
         switch (action.getType()) {
@@ -80,7 +82,7 @@ public class Restaurant {
 
     public void avancerTemps(int minutes) {
         // Votre code ici.
-            tick(minutes);
+        tick(minutes);
     }
 
     public void arreterService(){
@@ -92,11 +94,13 @@ public class Restaurant {
     // tick() | This is the method that manipulates the time in minutes
     public void tick(int minutes) {
         // temps
-        setTemps(getTemps() - minutes);
+        synchronized (tempsVerrou) {
+            setTemps(getTemps() - minutes);
+            tempsVerrou.notifyAll();
+        }
         // clients
         diminuerPatienceClients(minutes);
-        // prep
-
+        // TODO : updateStats
     }
 
     // afficherEtat()
@@ -105,35 +109,31 @@ public class Restaurant {
     // afficherStatistiques()
     public void afficherStatistiques() {}
 
-    // Client ajouterClient(int id, String nom, int patienceInitiale)
-    // DONE
+    // DONE : Client ajouterClient(int id, String nom, int patienceInitiale)
     public void ajouterClient(int id, String nom, int patienceInitiale) {
         Client client = creerClient(nom, patienceInitiale);
         client.setId(id);
         clients.put(id, client);
     }
 
-    // Commande passerCommande(int idClient, MenuPlat codePlat)
-    // DONE
+    // DONE : Commande passerCommande(int idClient, MenuPlat codePlat)
     public Commande passerCommande(int idClient, MenuPlat codePlat) {
         Commande commande = creerCommandePourClient(clients.get(idClient));
         commande.ajouterPlat(idClient, codePlat);
         return commande;
     }
 
-    // retirerProchaineCommande(): Commande
-    // DONE
+    // DONE : retirerProchaineCommande(): Commande
     public Commande retirerProchaineComande() {
         return fileDeCommandes.poll();
     }
 
-    // marquerCommandeTerminee(Commande commande)
+    // DONE : marquerCommandeTerminee(Commande commande)
     public void marquerCommandeTerminee(Commande commande) {
         commande.setEtat(EtatCommande.PRETE);
     }
 
-    // Client creerClient(String nom, int patienceInitiale)
-    // DONE
+    // DONE : Client creerClient(String nom, int patienceInitiale)
     public Client creerClient(String nom, int patienceInitiale) {
         return new Client(-1 , nom, patienceInitiale);
     }
