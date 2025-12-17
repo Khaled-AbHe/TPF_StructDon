@@ -1,5 +1,5 @@
 ========== RUSH AU RESTO ==========
-🍽️ Lecture des actions : data/scenario_1.txt
+🍽️ Lecture des actions : ..\data\scenario_1.txt
 
 [⏱️] Service = 10 min, 👨‍🍳 = 1
 [🚪 t=0] 🧍 Client #1 "Alice" (pat=5)
@@ -20,6 +20,6 @@
 	💰 Chiffre d'affaires : 14.99 $
 	Plats vendus :
 		🍟 FRITES : 0
-		🍔 BURGER : 0
 		🍕 PIZZA : 1
+		🍔 BURGER : 0
 ===================================

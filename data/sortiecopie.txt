@@ -1,3 +1,3 @@
 ========== RUSH AU RESTO ==========
-🍽️ Lecture des actions : data/scenario_simple.txt
+?? Lecture des actions : data/scenario_simple.txt
 
