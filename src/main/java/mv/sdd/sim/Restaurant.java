@@ -46,12 +46,11 @@ public class Restaurant {
                 demarrerService(action.getParam1(), action.getParam2());
                 break;
             case AJOUTER_CLIENT:
-                Client cli = creerClient(action.getParam1(), action.getParam3(), action.getParam2());
-                clients.put(cli.hashCode(), cli);
+                ajouterClient(action.getParam1(), action.getParam3(), action.getParam2());
                 break;
             case PASSER_COMMANDE:
-                Commande com = passerCommande(action.getParam1(), MenuPlat.valueOf(action.getParam3()));
-                creerCommandePourClient(clients.get(action.getParam1()), com);
+                passerCommande(action.getParam1(), MenuPlat.valueOf(action.getParam3()));
+                break;
             case AVANCER_TEMPS:
                 avancerTemps(action.getParam1());
                 break;
@@ -70,7 +69,9 @@ public class Restaurant {
         // Votre code ici.
         setTemps(dureeMax);
         for (int i = 0; i < nbCuisiniers; i++) {
-            cuisiniers.add(new Thread(new Cuisinier()));
+            Thread t = new Thread(new Cuisinier());
+            cuisiniers.add(t);
+            t.start();
         }
     }
 
@@ -93,6 +94,7 @@ public class Restaurant {
     public void afficherStatistiques() {}
 
     // Client ajouterClient(int id, String nom, int patienceInitiale)
+    // DONE
     public void ajouterClient(int id, String nom, int patienceInitiale) {
         clients.put(id, creerClient(id, nom, patienceInitiale));
     }
@@ -100,12 +102,13 @@ public class Restaurant {
     // Commande passerCommande(int idClient, MenuPlat codePlat)
     // DONE
     public Commande passerCommande(int idClient, MenuPlat codePlat) {
-        Commande commande = new Commande(clients.get(idClient), codePlat);
-        fileDeCommandes.add(commande);
+        Commande commande = creerCommandePourClient(clients.get(idClient));
+        commande.ajouterPlat(idClient, codePlat);
         return commande;
     }
 
     // retirerProchaineCommande(): Commande
+    // DONE
     public Commande retirerProchaineComande() {
         return fileDeCommandes.poll();
     }
@@ -123,11 +126,10 @@ public class Restaurant {
 
     // Commande creerCommandePourClient(Client client)
     // DONE
-    public Commande creerCommandePourClient(Client client, Commande commande) {
-        if (client.getCommande() == null) {
-            client.setCommande(commande);
-        }
-        return null;
+    public Commande creerCommandePourClient(Client client) {
+        Commande commande = new Commande(client, null);
+        client.setCommande(commande);
+        return commande;
     }
 
     // TODO : implémenter d'autres sous-méthodes qui seront appelées par les méthodes principales

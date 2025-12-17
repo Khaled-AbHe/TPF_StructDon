@@ -1,6 +1,7 @@
 package mv.sdd.sim.thread;
 
 import mv.sdd.model.Commande;
+import mv.sdd.sim.Restaurant;
 
 import java.util.ArrayDeque;
 
@@ -13,6 +14,6 @@ public class Cuisinier implements Runnable{
 
     @Override
     public void run() {
-        System.out.println(commande.toString());
+
     }
 }

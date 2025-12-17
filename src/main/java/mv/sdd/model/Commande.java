@@ -20,7 +20,6 @@ public class Commande {
         id = ++nbCmd;
         this.client = client;
         // À compléter
-        this.ajouterPlat(id, plat);
     }
 
     // getters
@@ -44,7 +43,7 @@ public class Commande {
     }
 
     // TODO : Ajoutez la méthode ajouterPlat
-    private void ajouterPlat(int id, MenuPlat mp) {
+    public void ajouterPlat(int id, MenuPlat mp) {
         Plat p = Constantes.MENU.get(mp);
         plats.put(id, p);
         calculerTempsPreparationTotal(p);
