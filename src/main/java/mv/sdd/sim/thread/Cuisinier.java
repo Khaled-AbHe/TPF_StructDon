@@ -11,20 +11,22 @@ public class Cuisinier implements Runnable{
         this.RESTAURANT = restaurant;
     }
 
-    public void setCommande() throws InterruptedException {
-        synchronized (RESTAURANT.getFileDeCommandes()) {
-            while (RESTAURANT.getFileDeCommandes().isEmpty()) {
-                RESTAURANT.getFileDeCommandes().wait();
+    private void getCommandeFromFile() throws InterruptedException {
+        synchronized (RESTAURANT.getFILE_DE_COMMANDES()) {
+            while (RESTAURANT.getFILE_DE_COMMANDES().isEmpty()) {
+                RESTAURANT.getFILE_DE_COMMANDES().wait();
             }
             this.commande = RESTAURANT.retirerProchaineComande();
+            this.commande.demarrerPreparation();
+            RESTAURANT.ajouterCommandeEnPreparation(this.commande);
         }
     }
 
-    public void prepare() throws InterruptedException {
-        synchronized (Restaurant.tempsVerrou) {
+    private void cuisiner() throws InterruptedException {
+        synchronized (RESTAURANT.getTempsVerrou()) {
             int oldTime = RESTAURANT.getTemps();
             while (RESTAURANT.getTemps() == oldTime) {
-                Restaurant.tempsVerrou.wait();
+                RESTAURANT.getTempsVerrou().wait();
             }
             commande.decrementerTempsRestant(oldTime - RESTAURANT.getTemps());
         }
@@ -34,9 +36,8 @@ public class Cuisinier implements Runnable{
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                setCommande();
-                commande.demarrerPreparation();
-                prepare();
+                getCommandeFromFile();
+                cuisiner();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

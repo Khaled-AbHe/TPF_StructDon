@@ -65,9 +65,15 @@ public final class Formatter {
      * @param client client à afficher
      * @param codePlat représentation des plats
      */
-    public static String clientLine(Client client, MenuPlat codePlat) {
+    public static String clientLine(Client client, String codePlat) { // J'ai changé codePlat à String car ça ce peux qu'un client peut avoir plusieurs plats
         // TODO: à implémenter
-        return null;
+        return String.format("\t#%d %s %s (pat=%d, %s)",
+                client.getId(),
+                client.getNom(),
+                emojiEtatClient(client.getEtat()),
+                client.getPatience(),
+                codePlat
+        );
     }
 
     // ---------- Lignes événements ---------- //
@@ -91,7 +97,7 @@ public final class Formatter {
     }
 
     public static String eventCommandeDebut(int temps, int idCommande, int duree) {
-        return String.format(Constantes.EVENT_CMD_DEBUT, idCommande,duree );
+        return String.format(Constantes.EVENT_CMD_DEBUT, temps, idCommande, duree);
     }
 
     public static String eventCommandeTerminee(int temps, int idCommande, Client client) {

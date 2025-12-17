@@ -37,6 +37,12 @@ public class Commande {
 
     public HashMap<Integer, Plat> getPlats() {return plats;}
 
+    public int getTempsRestant() {
+        return tempsRestant;
+    }
+
+    public double getMontant() { return montant; }
+
     // setters
     public void setEtat(EtatCommande etat) {
         this.etat = etat;
@@ -65,7 +71,7 @@ public class Commande {
 
     // TODO : Ajoutez la méthode estTermineeParTemps
     public boolean estTermineeParTemps() {
-        return false;
+        return this.tempsRestant <= 0;
     }
 
     // DONE : Ajoutez la méthode calculerTempsPreparationTotal

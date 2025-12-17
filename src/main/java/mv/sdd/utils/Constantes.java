@@ -19,10 +19,10 @@ public class Constantes {
     private static final String EMO_ENTREE       = "🚪";
     private static final String EMO_OK           = "✅";
     private static final String EMO_AVANCER      = "⏩";
-    private static final String EMO_STATS_CMD      = "📈";
-    private static final String EMO_ARGENT      = "💰";
+    private static final String EMO_STATS_CMD    = "📈";
+    private static final String EMO_ARGENT       = "💰";
     private static final String EMO_SERVICE      = "⏱️";
-    private static final String EMO_CUISINIER      = "👨‍🍳";
+    private static final String EMO_CUISINIER    = "👨‍🍳";
 
     // États clients (pour les lignes d’affichage)
     public static final String EMO_CLIENT_ATTENTE = "🙂";
