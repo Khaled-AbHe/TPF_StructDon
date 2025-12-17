@@ -9,10 +9,11 @@ public class Commande {
     private static int nbCmd = 0;
     private final Client client;
     private EtatCommande etat = EtatCommande.EN_ATTENTE;
-    private int tempsRestant; // en minutes simulées
+    private int tempsRestant = 0; // en minutes simulées
     // TODO : ajouter l'attribut plats et son getter avec le bon type et le choix de la SdD adéquat
     // private final <Votre structure de choix adéquat> plats
     private final HashMap<Integer, Plat> plats = new HashMap<>();
+    private double montant = 0;
 
     // TODO : Ajout du ou des constructeur(s) nécessaires ou compléter au besoin
     public Commande(Client client, MenuPlat plat) {
@@ -35,10 +36,6 @@ public class Commande {
         return etat;
     }
 
-    public int getTempsRestant() {
-        return tempsRestant;
-    }
-
     public HashMap<Integer, Plat> getPlats() {return plats;}
 
     // setters
@@ -47,34 +44,33 @@ public class Commande {
     }
 
     // TODO : Ajoutez la méthode ajouterPlat
-    private void ajouterPlat(int id, MenuPlat plat) {
-        plats.put(id, Constantes.MENU.get(plat));
+    private void ajouterPlat(int id, MenuPlat mp) {
+        Plat p = Constantes.MENU.get(mp);
+        plats.put(id, p);
+        calculerTempsPreparationTotal(p);
+        calculerMontant(p);
     };
 
     // TODO : Ajoutez la méthode demarrerPreparation
-
+    public void demarrerPreparation() {
+        setEtat(EtatCommande.EN_ATTENTE);
+    }
 
     // TODO : Ajoutez la méthode decrementerTempsRestant
-
+    public void decrementerTempsRestant() {}
 
     // TODO : Ajoutez la méthode estTermineeParTemps
-
+    public boolean estTermineeParTemps() {
+        return false;
+    }
 
     // TODO : Ajoutez la méthode calculerTempsPreparationTotal
-    public int calculerTempsPreparationTotal() {
-        int total = 0;
-        for (Plat plat : getPlats().values()) {
-            total += plat.getTempsPreparation();
-        }
-        return total;
+    public void calculerTempsPreparationTotal(Plat plat) {
+        this.tempsRestant += plat.getTempsPreparation();
     }
 
     // TODO : Ajoutez la méthode calculerMontant
-    public double calculerMontant() {
-        double montant = 0.0;
-        for (Plat plat : getPlats().values()) {
-            montant += plat.getPrix();
-        }
-        return montant;
+    public void calculerMontant(Plat plat) {
+        this.montant += plat.getPrix();
     }
 }

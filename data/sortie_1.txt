@@ -1,4 +1,3 @@
 ========== RUSH AU RESTO ==========
 🍽️ Lecture des actions : data/scenario_1.txt
 
-===================================

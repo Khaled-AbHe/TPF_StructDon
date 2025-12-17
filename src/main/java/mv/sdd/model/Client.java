@@ -16,6 +16,7 @@ public class Client {
         this.etat = EtatClient.EN_ATTENTE;
     }
 
+    // getters
     public int getId() {
         return id;
     }
@@ -28,24 +29,27 @@ public class Client {
         return patience;
     }
 
-    public void diminuerPatience(int minutes) {
-        // TODO: diminuer patience et passer à PARTI_FACHE si <= 0
-    }
-
     public EtatClient getEtat() {
         return etat;
-    }
-
-    public void setEtat(EtatClient etat) {
-        this.etat = etat;
     }
 
     public Commande getCommande() {
         return commande;
     }
 
+    // setters
+    public void setEtat(EtatClient etat) {
+        this.etat = etat;
+    }
+
     public void setCommande(Commande commande) {
         this.commande = commande;
+    }
+
+    // methods
+
+    public void diminuerPatience(int minutes) {
+        // TODO: diminuer patience et passer à PARTI_FACHE si <= 0
     }
 
     @Override
